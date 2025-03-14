@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom MCP - Mission Control Panel</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-robot"></i> Custom MCP</h1>
+            <p>Your Intelligent Mission Control Panel</p>
+        </header>
+
+        <main>
+            <section class="query-section">
+                <div class="query-container">
+                    <form id="query-form">
+                        <div class="input-group">
+                            <input type="text" id="query-input" placeholder="Ask me anything about your Gmail or GitHub..." required>
+                            <button type="submit" id="submit-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="conversation-section">
+                <div class="conversation-container" id="conversation">
+                    <div class="message system">
+                        <div class="message-content">
+                            <p>Hello! I'm your Custom MCP. I can help you with tasks like:</p>
+                            <ul>
+                                <li>Checking for GitHub warnings in your Gmail</li>
+                                <li>Finding dependency alerts for your repositories</li>
+                                <li>Summarizing recent GitHub notifications</li>
+                            </ul>
+                            <p>How can I assist you today?</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <section class="status-section">
+            <div class="status-container">
+                <div class="status-item" id="gmail-status">
+                    <i class="fas fa-envelope"></i>
+                    <span>Gmail: Checking...</span>
+                </div>
+                <div class="status-item" id="github-status">
+                    <i class="fab fa-github"></i>
+                    <span>GitHub: Checking...</span>
+                </div>
+                <div class="status-item" id="openai-status">
+                    <i class="fas fa-brain"></i>
+                    <span>OpenAI: Checking...</span>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Custom MCP &copy; 2023 - A Resume Project</p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html> 
