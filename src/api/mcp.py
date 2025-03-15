@@ -10,8 +10,8 @@ from typing import Optional, List, Dict, Any
 
 # Import services
 from src.services.agent import AgentService
-from src.services.gmail import GmailService
-from src.services.github import GitHubService
+from src.services.gmail import GmailAgent
+from src.services.github import GithubService
 from src.services.openai import OpenAIService
 
 # Create router
@@ -30,8 +30,8 @@ class MCPResponse(BaseModel):
     data: Optional[Dict[str, Any]] = None
 
 # Service instances
-gmail_service = GmailService()
-github_service = GitHubService()
+gmail_service = GmailAgent()
+github_service = GithubService()
 openai_service = OpenAIService()
 agent_service = AgentService(gmail_service, github_service, openai_service)
 

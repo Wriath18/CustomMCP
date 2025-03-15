@@ -1,24 +1,17 @@
-"""
-Data Models
-
-This module defines the data models used in the MCP application.
-"""
-
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
 class EmailMetadata(BaseModel):
-    """Model for email metadata."""
-    id: str
+    id : str
     thread_id: Optional[str] = None
     subject: str = "No Subject"
     from_address: str = Field(..., alias="from")
     date: Optional[str] = None
     snippet: Optional[str] = None
 
+
 class EmailContent(BaseModel):
-    """Model for email content."""
     id: str
     thread_id: Optional[str] = None
     subject: str = "No Subject"
@@ -28,8 +21,7 @@ class EmailContent(BaseModel):
     body: str
     labels: List[str] = []
 
-class GitHubRepository(BaseModel):
-    """Model for GitHub repository information."""
+class GithubRepository(BaseModel):
     name: str
     description: Optional[str] = None
     url: str
@@ -40,8 +32,8 @@ class GitHubRepository(BaseModel):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 
-class GitHubIssue(BaseModel):
-    """Model for GitHub issue information."""
+
+class GithubIssue(BaseModel):
     number: int
     title: str
     state: str
@@ -52,7 +44,6 @@ class GitHubIssue(BaseModel):
     labels: List[str] = []
 
 class GitHubAlert(BaseModel):
-    """Model for GitHub security alert information."""
     package: str
     severity: str
     summary: str
@@ -61,16 +52,13 @@ class GitHubAlert(BaseModel):
     url: str
 
 class ActionStep(BaseModel):
-    """Model for an action step in a plan."""
     type: str
     params: Dict[str, Any]
 
 class ActionPlan(BaseModel):
-    """Model for an action plan."""
     steps: List[ActionStep]
 
 class QueryResult(BaseModel):
-    """Model for query results."""
     response: str
     actions_taken: List[str]
     data: Optional[Dict[str, Any]] = None 

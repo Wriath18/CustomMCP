@@ -1,10 +1,3 @@
-"""
-OpenAI Service
-
-This service handles interactions with the OpenAI API for decision-making
-and response generation.
-"""
-
 import os
 import json
 from typing import Dict, List, Any, Optional
@@ -12,36 +5,28 @@ from typing import Dict, List, Any, Optional
 import openai
 
 class OpenAIService:
-    """
-    Service for interacting with OpenAI API.
-    """
-    
     def __init__(self):
         """Initialize the OpenAI service."""
         self.api_key = os.getenv("OPENAI_API_KEY")
         self.client = None
         
     async def _get_client(self):
-        """Get or create the OpenAI API client."""
         if self.client is None:
             if not self.api_key:
                 raise ValueError("OpenAI API key not properly configured")
-            
-            # Set up the client
+        
             openai.api_key = self.api_key
             self.client = openai.OpenAI(api_key=self.api_key)
         
         return self.client
     
     async def check_status(self) -> Dict[str, Any]:
-        """Check if the OpenAI service is properly configured and accessible."""
         try:
             client = await self._get_client()
-            # Try a simple API call to check if the API key is valid
             models = client.models.list()
             return {
                 "status": "connected",
-                "available_models": [model.id for model in models.data[:5]]  # Just show first 5 models
+                "available_models": [model.id for model in models.data[:5]] 
             }
         except Exception as e:
             return {
@@ -50,19 +35,7 @@ class OpenAIService:
             }
     
     async def create_action_plan(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
-        """
-        Create an action plan based on the user's query.
-        
-        Args:
-            query: The natural language query from the user
-            context: Optional context information
-            
-        Returns:
-            An action plan with steps to execute
-        """
         client = await self._get_client()
-        
-        # Prepare the system message with instructions
         system_message = """
         You are an intelligent agent that creates action plans based on user queries.
         Your task is to analyze the query and decide which services and actions are needed to fulfill it.
@@ -111,9 +84,12 @@ class OpenAIService:
            - If you need to get GitHub repository information from emails, just search Gmail first.
         3. For GitHub-related queries, you can omit the repo_name parameter in get_repo_alerts, get_repo_issues, get_repo_structure, and get_repo_contents if you've already searched Gmail.
            - The system will automatically use extracted repository names from emails.
-        4. If you're not sure about a parameter value, it's better to skip that step than to provide incorrect values.
-        5. Each step should have a "type" and "params" field.
-        6. When asked about repository structure or file contents, include get_repo_structure or get_repo_contents steps in your plan.
+        4. NEVER use "extracted_from_email" as a literal repo_name value. Either:
+           - Omit the repo_name parameter entirely to use automatically extracted names, or
+           - Provide a specific, actual repository name like "username/repo-name"
+        5. If you're not sure about a parameter value, it's better to skip that step than to provide incorrect values.
+        6. Each step should have a "type" and "params" field.
+        7. When asked about repository structure or file contents, include get_repo_structure or get_repo_contents steps in your plan.
         
         Your response should be a valid JSON object with the following structure:
         {
@@ -128,13 +104,10 @@ class OpenAIService:
             ]
         }
         """
-        
-        # Prepare the user message with the query and context
+    
         user_message = f"Query: {query}"
         if context:
             user_message += f"\nContext: {json.dumps(context)}"
-        
-        # Call the OpenAI API
         response = client.chat.completions.create(
             model="o3-mini",
             messages=[
@@ -144,31 +117,18 @@ class OpenAIService:
             response_format={"type": "json_object"}
         )
         
-        # Parse the response
         try:
             plan_text = response.choices[0].message.content.strip()
             plan = json.loads(plan_text)
             return plan
         except json.JSONDecodeError:
-            # If the response is not valid JSON, create a default plan
             return {
                 "steps": []
             }
     
     async def generate_response(self, query: str, data: Dict[str, Any]) -> str:
-        """
-        Generate a natural language response based on the query and collected data.
-        
-        Args:
-            query: The original query from the user
-            data: Data collected from various services
-            
-        Returns:
-            A natural language response
-        """
         client = await self._get_client()
-        
-        # Prepare the system message with instructions
+
         system_message = """
         You are an intelligent assistant that provides helpful responses based on data collected from various services.
         Your task is to analyze the data and provide a clear, concise, and informative response to the user's query.
@@ -193,11 +153,8 @@ class OpenAIService:
         
         Be helpful and informative, even if some data collection steps encountered errors.
         """
-        
-        # Prepare the user message with the query and data
         user_message = f"Query: {query}\n\nData: {json.dumps(data, indent=2)}"
-        
-        # Call the OpenAI API
+
         response = client.chat.completions.create(
             model="o3-mini",
             messages=[
@@ -205,6 +162,5 @@ class OpenAIService:
                 {"role": "user", "content": user_message}
             ]
         )
-        
-        # Return the response
+    
         return response.choices[0].message.content.strip() 
