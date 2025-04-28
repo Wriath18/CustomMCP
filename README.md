@@ -1,6 +1,6 @@
-# Custom MCP (Mission Control Panel) with ChatGPT AI Template
+# Custom MCP (Model Context Protocol) with ChatGPT AI Template
 
-This project integrates a Custom MCP (Mission Control Panel) with a ChatGPT AI Template to provide an intelligent agentic system that integrates with Gmail and GitHub.
+This project integrates a Custom MCP (Model Control Protocol) with a ChatGPT AI Template to provide an intelligent agentic system that integrates with Gmail and GitHub.
 
 ## Features
 
